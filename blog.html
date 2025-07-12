@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Priyanshi's Blog - Professional SPA</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&family=DM+Serif+Display&family=Montserrat:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  /* CSS Reset */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  a:focus {
+    outline: 2px dashed var(--primary);
+    outline-offset: 3px;
+  }
+
+  /* Root colors & variables */
+  :root {
+    --bg-light: #faf9fb;
+    --bg-accent: #f3e8ff;
+    --text-main: #222222;
+    --primary: #7a5af8;
+    --primary-light: #9f7eff;
+    --shadow-light: rgba(122, 90, 248, 0.15);
+    --hover-bg: #efe9ff;
+    --transition-speed: 0.35s;
+    --nav-height: 60px;
+  }
+  body.dark {
+    --bg-light: #121217;
+    --bg-accent: #1f1e2e;
+    --text-main: #e6e6fa;
+    --primary: #a78bfa;
+    --primary-light: #c7b7ff;
+    --shadow-light: rgba(167, 139, 250, 0.3);
+    --hover-bg: #2a2842;
+  }
+
+  /* Navigation */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--nav-height);
+    background: var(--bg-accent);
+    box-shadow: 0 2px 8px var(--shadow-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2.5rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    user-select: none;
+    z-index: 10000;
+    padding: 0 1rem;
+  }
+  nav a {
+    position: relative;
+    padding: 0.5rem 0.7rem;
+    border-radius: 8px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition: color var(--transition-speed) ease;
+  }
+  nav a.active,
+  nav a:hover {
+    color: var(--primary);
+    font-weight: 600;
+  }
+  nav a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 15%;
+    right: 15%;
+    height: 3px;
+    background: var(--primary);
+    border-radius: 3px;
+  }
+
+  /* Dark mode toggle */
+  #dark-toggle {
+    position: fixed;
+    top: 8px;
+    right: 15px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 10px var(--shadow-light);
+    transition: background-color 0.3s ease;
+    z-index: 11000;
+  }
+  #dark-toggle:hover {
+    background: var(--primary-light);
+  }
+
+  /* Page container */
+  main {
+    max-width: 900px;
+    margin: calc(var(--nav-height) + 3rem) auto 5rem;
+    padding: 0 1.5rem;
+  }
+
+  /* Each page section */
+  section.page {
+    opacity: 0;
+    transform: translateY(30px);
+    pointer-events: none;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    will-change: opacity, transform;
+  }
+  section.page.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  /* Home page */
+  #home {
+    position: relative;
+    background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat;
+    height: 80vh;
+    border-radius: 14px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+  }
+  #home::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.38);
+    border-radius: 14px;
+    z-index: 0;
+  }
+  #home > * {
+    position: relative;
+    z-index: 1;
+  }
+  #home h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 4rem;
+    margin: 0 0 0.5rem;
+    letter-spacing: 0.04em;
+    text-shadow: 0 0 12px rgba(0,0,0,0.85);
+  }
+  #home p {
+    font-size: 1.5rem;
+    font-style: italic;
+    max-width: 650px;
+    margin: 0 auto;
+    text-shadow: 0 0 8px rgba(0,0,0,0.75);
+  }
+
+  /* About page */
+  #about {
+    background: var(--bg-accent);
+    border-radius: 14px;
+    box-shadow: 0 8px 30px var(--shadow-light);
+    padding: 3rem 2rem;
+    color: var(--text-main);
+  }
+  #about h2 {
+    font-size: 2.8rem;
+    margin-bottom: 1.3rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--primary);
+  }
+  #about p {
+    max-width: 700px;
+    margin: 0 auto;
+    font-size: 1.15rem;
+    line-height: 1.9;
+  }
+
+  /* Blog page */
+  #blog h2 {
+    text-align: center;
+    font-size: 2.8rem;
+    color: var(--primary);
+    margin-bottom: 2rem;
+    font-weight: 700;
+  }
+  #blog .blogs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+    gap: 2rem;
+  }
+  #blog .blog {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px var(--shadow-light);
+    padding: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+  }
+  #blog .blog:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(122,90,248,0.25);
+  }
+  #blog img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    user-select: none;
+    flex-shrink: 0;
+  }
+  #blog h3 {
+    margin: 0.4rem 0 0.8rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: var(--primary);
+  }
+  #blog p {
+    font-size: 1rem;
+    color: #444;
+    line-height: 1.5;
+    flex-grow: 1;
+  }
+
+  /* Contact page */
+  #contact {
+    background: var(--bg-accent);
+    border-radius: 14px;
+    box-shadow: 0 8px 30px var(--shadow-light);
+    padding: 3rem 2rem;
+  }
+  #contact h2 {
+    font-size: 2.8rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--primary);
+  }
+  #contact p {
+    text-align: center;
+    font-size: 1.15rem;
+    margin-bottom: 2rem;
+  }
+  form {
+    max-width: 480px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  input, textarea {
+    font-family: 'Poppins', sans-serif;
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    border: 1.5px solid #ccc;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background: white;
+  }
+  body.dark input,
+  body.dark textarea {
+    background: #2c2c3c;
+    border-color: #555;
+    color: #eee;
+  }
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 8px var(--primary-light);
+  }
+  textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+  button.submit-btn {
+    background-color: var(--primary);
+    border: none;
+    color: white;
+    padding: 0.85rem 1.5rem;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button.submit-btn:hover {
+    background-color: var(--primary-light);
+  }
+
+  /* Footer */
+  footer {
+    background-color: var(--bg-accent);
+    text-align: center;
+    padding: 2rem 1rem;
+    font-size: 0.9rem;
+    box-shadow: 0 -2px 10px var(--shadow-light);
+    border-radius: 0 0 14px 14px;
+  }
+  .social-icons {
+    margin-bottom: 1rem;
+  }
+  .social-icons a {
+    font-size: 1.8rem;
+    color: var(--text-main);
+    margin: 0 0.8rem;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    user-select: none;
+  }
+  .social-icons a:hover {
+    color: #e91e63;
+  }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    nav {
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding: 0.8rem 1rem;
+      font-size: 1rem;
+    }
+    #home h1 {
+      font-size: 2.8rem;
+    }
+    #home p {
+      font-size: 1.2rem;
+    }
+    #about h2, #blog h2, #contact h2 {
+      font-size: 2.2rem;
+    }
+    #blog .blogs {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+
+<nav role="navigation" aria-label="Primary Navigation">
+  <a href="#home" data-page="home" class="active" tabindex="0">Home</a>
+  <a href="#about" data-page="about" tabindex="0">About Me</a>
+  <a href="#blog" data-page="blog" tabindex="0">Blog</a>
+  <a href="#contact" data-page="contact" tabindex="0">Contact</a>
+</nav>
+
+<button id="dark-toggle" aria-pressed="false" aria-label="Toggle Dark Mode">Dark Mode</button>
+
+<main role="main" tabindex="-1">
+  <section id="home" class="page active" aria-labelledby="home-title" tabindex="0">
+    <h1 id="home-title">Priyanshi's World</h1>
+    <p><em>"Creativity is the magic of the soul."</em></p>
+  </section>
+
+  <section id="about" class="page" aria-labelledby="about-title" tabindex="0">
+    <h2 id="about-title">About Me</h2>
+    <p>Hi, I’m Priyanshi — a passionate teen who enjoys creating digital magic through code and design. I explore programming, art, and self-growth. This blog is a reflection of my world — ideas, projects, vibes, and vision. 💡💻🌸</p>
+  </section>
+
+  <section id="blog" class="page" aria-labelledby="blog-title" tabindex="0">
+    <h2 id="blog-title">Blog Posts</h2>
+    <div class="blogs">
+      <article class="blog" tabindex="0" aria-label="Blog post: How I Made My First App">
+        <img src="https://i.pinimg.com/1200x/ed/79/1d/ed791da1edfe16f828921c7da017b6c3.jpg" alt="First App Screenshot" />
+        <h3>How I Made My First App</h3>
+        <p>I used Pygame to make a painting app. It was basic, but creating something from nothing was amazing.</p>
+      </article>
+      <article class="blog" tabindex="0" aria-label="Blog post: Becoming Confident Slowly">
+        <img src="https://i.pinimg.com/736x/f9/e5/b7/f9e5b7c86e7ad1b9dd44277f52b77d1d.jpg" alt="Personality Concept" />
+        <h3>Becoming Confident Slowly</h3>
+        <p>From staying quiet to finding my own powerful voice, this journey is full of self-discovery and growth.</p>
+      </article>
+      <article class="blog" tabindex="0" aria-label="Blog post: Why I Love Coding">
+        <img src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e" alt="Coding Love" />
+        <h3>Why I Love Coding</h3>
+        <p>Writing code is like talking to the computer and asking it to do magic. It’s fun and empowering!</p>
+      </article>
+      <article class="blog" tabindex="0" aria-label="Blog post: Tech Girl Energy">
+        <img src="https://images.unsplash.com/photo-1557683316-973673baf926" alt="Tech Girl" />
+        <h3>Tech Girl Energy</h3>
+        <p>Being a girl in tech is powerful. I share how I stay curious, keep learning, and grow in my own way.</p>
+      </article>
+      <article class="blog" tabindex="0" aria-label="Blog post: Scorpio Vibes & Me">
+        <img src="https://i.pinimg.com/736x/32/2d/93/322d933773ef2cf2533058b2e20ded02.jpg" alt="Scorpio Vibes" />
+        <h3>Creativity Within Me/h3>
+        <p>Creativity lives inside me, turning ordinary moments into something special. It’s my unique way of seeing the world and making it brighter every day.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="contact" class="page" aria-labelledby="contact-title" tabindex="0">
+    <h2 id="contact-title">Contact Me</h2>
+    <p>If you want to connect, ask questions, or just say hi, fill out the form below!</p>
+    <form onsubmit="alert('Thank you for your message!'); return false;" aria-label="Contact form">
+      <input type="text" name="name" placeholder="Your Name" required aria-required="true" />
+      <input type="email" name="email" placeholder="Your Email" required aria-required="true" />
+      <textarea name="message" placeholder="Your Message" required aria-required="true"></textarea>
+      <button type="submit" class="submit-btn">Send</button>
+    </form>
+  </section>
+</main>
+
+<footer>
+  <div class="social-icons" role="contentinfo" aria-label="Social media links">
+    <a href="#" title="Instagram" aria-label="Instagram" tabindex="0">📷</a>
+    <a href="#" title="YouTube" aria-label="YouTube" tabindex="0">🎥</a>
+    <a href="#" title="Pinterest" aria-label="Pinterest" tabindex="0">📌</a>
+  </div>
+  <p>© 2025 Priyanshi's Blog. Crafted with ❤️ and imagination.</p>
+</footer>
+
+<script>
+  // SPA with hash routing and accessibility focus management
+  const navLinks = document.querySelectorAll('nav a');
+  const pages = document.querySelectorAll('.page');
+  const mainContent = document.querySelector('main');
+  const darkToggle = document.getElementById('dark-toggle');
+
+  // Show page function
+  function showPage(pageId, updateHash = true) {
+    pages.forEach(page => {
+      if (page.id === pageId) {
+        page.classList.add('active');
+        page.setAttribute('tabindex', '0');
+        page.focus();
+      } else {
+        page.classList.remove('active');
+        page.setAttribute('tabindex', '-1');
+      }
+    });
+    navLinks.forEach(link => {
+      if (link.dataset.page === pageId) {
+        link.classList.add('active');
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.classList.remove('active');
+        link.removeAttribute('aria-current');
+      }
+    });
+    if (updateHash) {
+      history.replaceState(null, '', `#${pageId}`);
+    }
+  }
+
+  // On nav link click
+  navLinks.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const pageId = link.dataset.page;
+      showPage(pageId);
+    });
+  });
+
+  // On page load, show hash or default to home
+  function initPage() {
+    const hash = window.location.hash.replace('#', '');
+    if (hash && [...pages].some(p => p.id === hash)) {
+      showPage(hash, false);
+    } else {
+      showPage('home', false);
+    }
+  }
+  window.addEventListener('load', initPage);
+
+  // Listen for hash change (back/forward buttons)
+  window.addEventListener('hashchange', () => {
+    const hash = window.location.hash.replace('#', '');
+    if (hash && [...pages].some(p => p.id === hash)) {
+      showPage(hash, false);
+    }
+  });
+
+  // Dark mode toggle logic with persistence
+  function setDarkMode(enabled) {
+    if (enabled) {
+      document.body.classList.add('dark');
+      darkToggle.textContent = 'Light Mode';
+      darkToggle.setAttribute('aria-pressed', 'true');
+      localStorage.setItem('darkMode', 'true');
+    } else {
+      document.body.classList.remove('dark');
+      darkToggle.textContent = 'Dark Mode';
+      darkToggle.setAttribute('aria-pressed', 'false');
+      localStorage.setItem('darkMode', 'false');
+    }
+  }
+  darkToggle.addEventListener('click', () => {
+    setDarkMode(!document.body.classList.contains('dark'));
+  });
+
+  // Initialize dark mode based on saved preference or system setting
+  (function(){
+    const savedMode = localStorage.getItem('darkMode');
+    if (savedMode === 'true') {
+      setDarkMode(true);
+    } else if(savedMode === 'false') {
+      setDarkMode(false);
+    } else {
+      // If no saved preference, match system preference
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setDarkMode(prefersDark);
+    }
+  })();
+</script>
+
+</body>
+</html>
